@@ -1,4 +1,6 @@
-function img_out = img_randomise(obj, img, amin, amax, edmin, edmax, trxmin, trxmax, trymin, trymax)
+%#ok<*SEPEX> 
+
+function img_out = img_randomise(obj, img, allow_flip, amin, amax, edmin, edmax, trxmin, trxmax, trymin, trymax)
 
 % This function takes an image (binary format) and randomises it slightly;
 % Randomisations are rotation, erosion/dilation and translation (both X and Y axis)
@@ -7,7 +9,8 @@ function img_out = img_randomise(obj, img, amin, amax, edmin, edmax, trxmin, trx
 %
 % Arguments:
 %  * obj: -
-%  * img: image (binary format)
+%  * img: image
+%  * allow_flip: can the image be flipped horizontally?
 %  * amin: minimum rotation angle
 %  * amax: maximum rotation angle
 %  * edmin: minimum erosion/dilation radius
@@ -21,16 +24,18 @@ function img_out = img_randomise(obj, img, amin, amax, edmin, edmax, trxmin, trx
 rng shuffle;
 
 % Assign default values if necessary
-if (nargin < 10) trymax = obj.rand_trymax; end
-if (nargin < 9) trymin = obj.rand_trymin; end
-if (nargin < 8) trxmax = obj.rand_trxmax; end    
-if (nargin < 7) trxmin = obj.rand_trxmin; end
-if (nargin < 6) edmax = obj.rand_edmax; end
-if (nargin < 5) edmin = obj.rand_edmin; end
-if (nargin < 4) amax = obj.rand_amax; end
-if (nargin < 3) amin = obj.rand_amin; end
+if (nargin < 11) trymax = obj.rand_trymax; end
+if (nargin < 10) trymin = obj.rand_trymin; end
+if (nargin < 9) trxmax = obj.rand_trxmax; end    
+if (nargin < 8) trxmin = obj.rand_trxmin; end
+if (nargin < 7) edmax = obj.rand_edmax; end
+if (nargin < 6) edmin = obj.rand_edmin; end
+if (nargin < 5) amax = obj.rand_amax; end
+if (nargin < 4) amin = obj.rand_amin; end
+if (nargin < 3) allow_flip = 1; end
 
 % Randomise parameters
+imflip = allow_flip;
 ang = round(amin + (amax - amin) * rand());
 ed = round(rand());
 edr = round(edmin + (edmax - edmin) * rand());
@@ -41,6 +46,10 @@ tr_y_dir = round(rand());
 
 if (tr_x_dir == 0) tr_x_dir = -1; end
 if (tr_y_dir == 0) tr_y_dir = -1; end
+
+if (imflip == 1) 
+    img = flip(img, 2); 
+end
 
 SE = strel('disk', edr);
 
@@ -57,13 +66,14 @@ end
 for i = 1:1:3
     if (actions(1) == 1 && actions_order(1) == i)
         img = imrotate(img, ang);
+        img = obj.img_grow(img, 25);
     end
 
     if (actions(2) == 1 && actions_order(2) == i)
         if (ed == 0)
-            img = imerode(img, SE);
+            img = obj.img_shrink(img, edr);
         else
-            img = imdilate(img, SE);
+            img = obj.img_grow(img, edr);
         end
     end
 

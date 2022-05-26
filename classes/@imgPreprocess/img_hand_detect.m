@@ -7,9 +7,9 @@ IMG_PROCESS = imgProcess();
 img = imresize(img, obj.imgsize);
 img = rgb2gray(img);
 img = edge(img, 'canny');
-
+% 
 r_crop = round(r_se / 4);
-
+% 
 se = strel("disk", r_se);
 img = imclose(img, se);
 img = IMG_PROCESS.img_crop_center(img, obj.imgsize(1, 1) - 2 * r_crop, obj.imgsize(1, 2) - 2 * r_crop); 
