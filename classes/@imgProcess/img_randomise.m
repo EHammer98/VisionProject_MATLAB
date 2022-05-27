@@ -78,7 +78,7 @@ for i = 1:1:3
     end
 
     if (actions(3) == 1 && actions_order(2) == i)
-        img = imtranslate(img, [tr_x * tr_x_dir, tr_y * tr_y_dir]);
+        img = imtranslate(img, [tr_x * tr_x_dir, tr_y * tr_y_dir], 'FillValues', 0);
     end
 end
 

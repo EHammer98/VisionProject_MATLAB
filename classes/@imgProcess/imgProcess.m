@@ -2,14 +2,14 @@ classdef imgProcess
     properties
         % Default image randomiser parameters
         rand_amin = 2; % Min rotation angle
-        rand_amax = 10; % Max rotation angle 
+        rand_amax = 5; % Max rotation angle 
         rand_edmin = 3; % Min erode/dilate radius
         rand_edmax = 20; % Max erode/dilate radius
         rand_trxmin = 4; % Min translation across x-axis
-        rand_trxmax = 75; % Max translation across x-axis
+        rand_trxmax = 35; % Max translation across x-axis
         rand_trymin = 2; % Min translation across y-axis
         rand_trymax = 8; % Max translation across y-axis
-        rand_imgsize = [310, 470]; % Target image size (470 x 310 pixels)
+        rand_imgsize = [300, 460]; % Target image size (470 x 310 pixels)
 
         catg_map = containers.Map( {'thumbsup', 'thumbsdown', 'highfive', 'down'}, ...
                                    {1, 2, 3, 4} );
